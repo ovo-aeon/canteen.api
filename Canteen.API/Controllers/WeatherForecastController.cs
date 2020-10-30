@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Canteen.Core.DataAccess;
+using Canteen.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,9 +19,12 @@ namespace Canteen.API.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IActiveRepository repo;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IActiveRepository repository)
         {
+            repo = repository;
             _logger = logger;
         }
 
@@ -34,6 +39,18 @@ namespace Canteen.API.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost]
+        [Route("safe")]
+        public IActionResult Post(AppUser user)
+        {
+            if (!ModelState.IsValid) return BadRequest(user);
+
+           var id = repo.Save(user);
+            _logger.LogInformation("user id of {id}", id);
+            return Ok(user);
+
         }
     }
 }

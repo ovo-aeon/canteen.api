@@ -35,6 +35,8 @@ namespace Canteen.API
                 Configuration.GetConnectionString("Canteen.DefaultConnection"),
                 ctx => ctx.MigrationsAssembly(typeof(CanteenContext).Assembly.FullName)));
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IActiveRepository, ActiveRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

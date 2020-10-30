@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Canteen.Core.DataAccess
 {
-    public class UnitOfWork:IUnitOfWork
+    public class UnitOfWork:IUnitOfWork 
     {
         private readonly CanteenContext _context;
         public UnitOfWork(CanteenContext context)
