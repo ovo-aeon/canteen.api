@@ -41,16 +41,16 @@ namespace Canteen.API.Controllers
             .ToArray();
         }
 
-        [HttpPost]
-        [Route("safe")]
-        public IActionResult Post(AppUser user)
-        {
-            if (!ModelState.IsValid) return BadRequest(user);
+        //[HttpPost]
+        //[Route("safe")]
+        //public IActionResult Post(AppUser user)
+        //{
+        //    if (!ModelState.IsValid) return BadRequest(user);
 
-           var id = repo.Save(user);
-            _logger.LogInformation("user id of {id}", id);
-            return Ok(user);
+        //   var id = repo.Save(user);
+        //    _logger.LogInformation("user id of {id}", id);
+        //    return Ok(user);
 
-        }
+        //}
     }
 }

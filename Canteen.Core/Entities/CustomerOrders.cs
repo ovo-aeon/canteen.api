@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Canteen.Core.Models
+namespace Canteen.Core.Entities
 {
     public class CustomerOrders:Entity
     {

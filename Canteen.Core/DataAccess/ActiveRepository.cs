@@ -1,4 +1,5 @@
-﻿using Canteen.Core.Models;
+﻿using Canteen.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Canteen.Core.DataAccess
 {
     public class ActiveRepository  : IActiveRepository
     {
-        private ILogger<Repository> _log;
+        private readonly ILogger<Repository> _log;
         protected readonly CanteenContext ctx;
 
         public ActiveRepository(ILogger<Repository> log, CanteenContext ctx)
@@ -37,13 +38,13 @@ namespace Canteen.Core.DataAccess
             ctx.Set<object>().Remove(entity);
         }
 
-        public virtual object Get(long id)
+        public virtual object GetById(long id)
         {
             return ctx.Set<object>().Find(id);
 
         }
 
-        public virtual IEnumerable<object> Get()
+        public virtual IEnumerable<object> GetAll()
         {
             return ctx.Set<object>().ToList();
         }
@@ -53,6 +54,19 @@ namespace Canteen.Core.DataAccess
             ctx.Dispose();
         }
 
+        public long Save(IdentityUser entity)
+        {
+            ctx.Set<object>().Add(entity);
+            ctx.SaveChanges();
+            return long.Parse(entity.Id);
+        }
+
+        public object GetById(string email)
+        {
+            return ctx.Set<object>().Find(email);
+
+        }
+
         #endregion
 
     }
@@ -60,9 +74,13 @@ namespace Canteen.Core.DataAccess
     public interface IActiveRepository : IDisposable
     {
         long Save(Entity entity);
+        long Save(IdentityUser entity);
+
         void SaveAll(IEnumerable<object> entities);
         void Delete(object entity);
-        IEnumerable<object> Get();
-        object Get(long id);
+        IEnumerable<object> GetAll();
+        object GetById(long id);
+        object GetById(string username);
+
     }
 }

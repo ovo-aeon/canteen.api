@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Canteen.Core.DataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,7 +14,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Canteen.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Canteen.API
 {
@@ -30,12 +35,34 @@ namespace Canteen.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            // register data access implementation
             services.AddDbContextPool<CanteenContext>(options => 
             options.UseSqlServer(
                 Configuration.GetConnectionString("Canteen.DefaultConnection"),
                 ctx => ctx.MigrationsAssembly(typeof(CanteenContext).Assembly.FullName)));
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<IActiveRepository, ActiveRepository>();
+
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CanteenContext>();
+            //register jwt authentication services
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.SaveToken = true;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = Configuration["Jwt: Issuer"],
+                            ValidAudience = Configuration["Jwt: Audience"],
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt: SecretKey"])),
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
 
         }
 
@@ -49,8 +76,14 @@ namespace Canteen.API
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            // global cors policy
+            //app.UseCors(x => x
+            //    .AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader());
 
+            app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
 
