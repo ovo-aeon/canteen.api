@@ -11,29 +11,41 @@ using Canteen.Core.BusinessModels;
 using Microsoft.AspNetCore.Authorization;
 using Canteen.Core.Managers;
 
-namespace Canteen.API.Controllers.v1
+namespace Canteen.API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IActiveRepository _ctx;
-        private readonly IAuthManger _auth;
+        private readonly IAuthManager _mgr;
 
-        public AuthController(IActiveRepository context, IAuthManger auth)
+        public AuthController(IAuthManager mgr)
         {
-            _auth = auth;
-            _ctx = context;
+            _mgr = mgr;
         }
 
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public IActionResult Login(AuthenticateModel model)
+        public IActionResult Login(UserModel model)
         {
-            var user = _auth.LoginUser(model);
+            //var user = _auth.LoginUser(model);
+            //var useh = new AppUser();
+            //useh.PasswordHash = model.Password;
+            //useh.UserName = model.Username;
+            //_uow.GetRepository<AppUser>().Insert(useh);
+            //_uow.Commit();
+            return Ok();
+        }
 
+        [HttpPost]
+        [Route("signup")]
+        [AllowAnonymous]
+        public IActionResult Register(UserModel model)
+        {
+            var user = _mgr.CreateUser(model, model.Password);
+            if (user == null) return BadRequest(model);
             return Ok(user);
         }
         //// GET: api/Auth

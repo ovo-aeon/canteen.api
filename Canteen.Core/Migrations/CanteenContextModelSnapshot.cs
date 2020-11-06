@@ -19,7 +19,7 @@ namespace Canteen.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Canteen.Core.Models.AppUser", b =>
+            modelBuilder.Entity("Canteen.Core.Entities.AppUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,18 +44,27 @@ namespace Canteen.Core.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Phone")
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserType")
+                    b.Property<int>("Role")
                         .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("AppUsers");
                 });
 
-            modelBuilder.Entity("Canteen.Core.Models.CustomerOrders", b =>
+            modelBuilder.Entity("Canteen.Core.Entities.CustomerOrders", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,12 +73,6 @@ namespace Canteen.Core.Migrations
 
                     b.Property<int?>("AppUserId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTimeOffset>("OrderDate")
                         .HasColumnType("datetimeoffset");
@@ -81,12 +84,12 @@ namespace Canteen.Core.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("CstOrders");
+                    b.ToTable("CustomerOrders");
                 });
 
-            modelBuilder.Entity("Canteen.Core.Models.CustomerOrders", b =>
+            modelBuilder.Entity("Canteen.Core.Entities.CustomerOrders", b =>
                 {
-                    b.HasOne("Canteen.Core.Models.AppUser", "AppUser")
+                    b.HasOne("Canteen.Core.Entities.AppUser", "AppUser")
                         .WithMany("Orders")
                         .HasForeignKey("AppUserId");
                 });

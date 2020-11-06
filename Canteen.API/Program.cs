@@ -38,9 +38,10 @@ namespace Canteen.API
                     //logging initial app state
                     Log.Information("Canteen is Open.");
                     //Seed Default Users
-                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await Seed.SeedEssentialsAsync(userManager, roleManager);
+                    //var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                    //var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    //await Seed.SeedEssentialsAsync(userManager, roleManager);
+                    host.Run();
                 }
                 catch (Exception ex)
                 {
@@ -49,12 +50,10 @@ namespace Canteen.API
                 }
                 finally
                 {
-                    Log.Information("Canteen is Closed.");
                     Log.CloseAndFlush();
                 }
             }           
 
-            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

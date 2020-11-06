@@ -11,7 +11,7 @@ namespace Canteen.Core.Utilities
 {
     public static class AuthHelperClass
     {
-        private static string generateJwtToken(AppUser user, string Key)
+        public static string GenerateJwtToken(AppUser user, string Key)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -26,7 +26,7 @@ namespace Canteen.Core.Utilities
             return tokenHandler.WriteToken(token);
         }
 
-        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
@@ -38,7 +38,7 @@ namespace Canteen.Core.Utilities
             }
         }
 
-        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Canteen.Core.DataAccess
 {
-    public class CanteenContext : IdentityDbContext<AppUser>
+    public class CanteenContext : DbContext
     {
         public CanteenContext(DbContextOptions<CanteenContext> options) : base(options)
         {
@@ -16,6 +16,7 @@ namespace Canteen.Core.DataAccess
 
         // set DB tables
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<CustomerOrders> CstOrders { get; set; }
+        public DbSet<CustomerOrders> CustomerOrders { get; set; }
+        
     }
 }

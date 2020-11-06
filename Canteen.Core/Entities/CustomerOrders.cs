@@ -9,6 +9,7 @@ namespace Canteen.Core.Entities
         public virtual AppUser AppUser { get; set; }
         public DateTimeOffset OrderDate { get; set; }
         public bool OrderStatus { get; set; }
+        public int Money { get; set; }
 
     }
 }

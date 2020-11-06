@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Canteen.Core.Migrations
 {
-    public partial class Initial : Migration
+    public partial class StartOveragain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,14 +13,17 @@ namespace Canteen.Core.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    ModifiedDate = table.Column<DateTime>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
-                    UserType = table.Column<int>(nullable: false),
-                    IsActive = table.Column<bool>(nullable: false)
+                    PasswordHash = table.Column<byte[]>(nullable: true),
+                    PasswordSalt = table.Column<byte[]>(nullable: true),
+                    Role = table.Column<int>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,38 +31,36 @@ namespace Canteen.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CstOrders",
+                name: "CustomerOrders",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    ModifiedDate = table.Column<DateTime>(nullable: false),
-                    CustomerIdId = table.Column<int>(nullable: true),
+                    AppUserId = table.Column<int>(nullable: true),
                     OrderDate = table.Column<DateTimeOffset>(nullable: false),
                     OrderStatus = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CstOrders", x => x.Id);
+                    table.PrimaryKey("PK_CustomerOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CstOrders_AppUsers_CustomerIdId",
-                        column: x => x.CustomerIdId,
+                        name: "FK_CustomerOrders_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CstOrders_CustomerIdId",
-                table: "CstOrders",
-                column: "CustomerIdId");
+                name: "IX_CustomerOrders_AppUserId",
+                table: "CustomerOrders",
+                column: "AppUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CstOrders");
+                name: "CustomerOrders");
 
             migrationBuilder.DropTable(
                 name: "AppUsers");

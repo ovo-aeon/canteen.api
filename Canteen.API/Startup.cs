@@ -19,6 +19,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Canteen.Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Canteen.API.Middlewares;
+using Canteen.Core.Managers;
 
 namespace Canteen.API
 {
@@ -40,10 +42,9 @@ namespace Canteen.API
             options.UseSqlServer(
                 Configuration.GetConnectionString("Canteen.DefaultConnection"),
                 ctx => ctx.MigrationsAssembly(typeof(CanteenContext).Assembly.FullName)));
-            services.AddScoped<IRepository, Repository>();
-            services.AddScoped<IActiveRepository, ActiveRepository>();
-
-            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CanteenContext>();
+           // 
+            services.AddUnitOfWork<CanteenContext>();
+            //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CanteenContext>();
             //register jwt authentication services
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -59,16 +60,20 @@ namespace Canteen.API
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = Configuration["Jwt: Issuer"],
                             ValidAudience = Configuration["Jwt: Audience"],
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt: SecretKey"])),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                             ClockSkew = TimeSpan.Zero
                         };
                     });
+            // Managers
+            services.AddScoped<IAuthManager, AuthManager>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CanteenContext context)
         {
+            context.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

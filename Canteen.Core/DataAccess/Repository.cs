@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,51 +8,86 @@ using System.Text;
 
 namespace Canteen.Core.DataAccess
 {
-    public class Repository: IRepository
+    public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly CanteenContext _context;
-        public Repository(CanteenContext context)
+        private readonly CanteenContext context;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public Repository(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
-        public void Add(object entity)
+
+        public Repository(CanteenContext _context)
         {
-            _context.Set<object>().Add(entity);
-            _context.SaveChanges();
+            context = _context;
         }
-        public void AddRange(IEnumerable<object> entities)
+
+        public void Insert(T entity)
         {
-            _context.Set<object>().AddRange(entities);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            context.Add(entity);
         }
-        public IEnumerable<object> Find(Expression<Func<object, bool>> expression)
+        public void Insert(IEnumerable<T> entities)
         {
-            return _context.Set<object>().Where(expression);
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+            context.AddRange(entities);
         }
-        public IEnumerable<object> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            return _context.Set<object>().ToList();
+            return context.Set<T>().AsNoTracking();
         }
-        public object GetById(long id)
+        public void Delete(T id)
         {
-            return _context.Set<object>().Find(id);
+            context.Set<T>().Remove(id);
         }
-        public void Remove(object entity)
+
+        public IQueryable<T> Query(string sql, params object[] parameters)
         {
-            _context.Set<object>().Remove(entity);
+            throw new NotImplementedException();
         }
-        public void RemoveRange(IEnumerable<object> entities)
+
+        public void Update(T entity)
         {
-            _context.Set<object>().RemoveRange(entities);
+            context.Set<T>().Update(entity);
+        }
+        public T GetOne(object id)
+        {
+            return context.Set<T>().Find(id);
+        }
+
+        public T FindByCondition(Expression<Func<T, bool>> expression)
+        {
+           return context.Set<T>().Where(expression).FirstOrDefault();
+        }
+
+        public List<T> FindManyByCondition(Expression<Func<T, bool>> expression)
+        {
+            return context.Set<T>().Where(expression).ToList();
+        }
+        public void DeletePlenty(IEnumerable<T> entities)
+        {
+            context.Set<T>().RemoveRange(entities);
         }
     }
-    public interface IRepository
+
+    public interface IRepository<T> where T : class
     {
-        object GetById(long id);
-        IEnumerable<object> GetAll();
-        IEnumerable<object> Find(Expression<Func<object, bool>> expression);
-        void Add(object entity);
-        void AddRange(IEnumerable<object> entities);
-        void Remove(object entity);
-        void RemoveRange(IEnumerable<object> entities);
+        IQueryable<T> Query(string sql, params object[] parameters);
+        void Insert(T entity);
+        void Insert(IEnumerable<T> entity);
+        IEnumerable<T> GetAll();
+        T GetOne(object entity);
+        T FindByCondition(Expression<Func<T, bool>> expression);
+        List<T> FindManyByCondition(Expression<Func<T, bool>> expression);
+        void Delete(T entity);
+        void DeletePlenty(IEnumerable<T> entities);
+        void Update(T entity);
     }
 }

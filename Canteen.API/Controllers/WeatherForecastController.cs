@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Canteen.Core.DataAccess;
-using Canteen.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,12 +18,10 @@ namespace Canteen.API.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IActiveRepository repo;
 
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IActiveRepository repository)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
-            repo = repository;
             _logger = logger;
         }
 
