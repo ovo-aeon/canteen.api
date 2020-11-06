@@ -1,5 +1,6 @@
 ﻿using Canteen.Core.Entities;
 using Canteen.Core.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,7 @@ namespace Canteen.Core.BusinessModels
         [StringLength(11, ErrorMessage = "Phone can't be longer than 11 characters")]
         public string Phone { get; set; }
 
+        [JsonIgnore]
         [Required(ErrorMessage = "Password is required")]
         [StringLength(60, ErrorMessage = "Password can't be less than 9 characters")]
         public string Password { get; set; }
@@ -62,6 +64,9 @@ namespace Canteen.Core.BusinessModels
         public string JwtToken { get; set; }
 
         public string Refresh { get; set; }
+        public string Username { get; set; }
+
+        public string Email { get; set; }
 
     }
 

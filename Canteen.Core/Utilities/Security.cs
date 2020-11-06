@@ -8,7 +8,7 @@ namespace Canteen.Core.Utilities
     {
 
     }
-    public class JWT
+    public class Jwt
     {
         public string Key { get; set; }
         public string Issuer { get; set; }

@@ -13,7 +13,6 @@ using Canteen.Core.Managers;
 
 namespace Canteen.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -28,15 +27,13 @@ namespace Canteen.API.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public IActionResult Login(UserModel model)
+        public IActionResult Login(AuthenticateUserModel model)
         {
-            //var user = _auth.LoginUser(model);
-            //var useh = new AppUser();
-            //useh.PasswordHash = model.Password;
-            //useh.UserName = model.Username;
-            //_uow.GetRepository<AppUser>().Insert(useh);
-            //_uow.Commit();
-            return Ok();
+            var user = _mgr.LoginUser(model, model.Password);
+
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+            return Ok(user);
         }
 
         [HttpPost]

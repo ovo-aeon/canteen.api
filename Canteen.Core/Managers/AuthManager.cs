@@ -2,7 +2,6 @@
 using Canteen.Core.DataAccess;
 using Canteen.Core.Entities;
 using Canteen.Core.Utilities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -14,17 +13,17 @@ namespace Canteen.Core.Managers
     {
         private readonly ILogger<IAuthManager> _log;
         private readonly IUnitOfWork _uow;
-        private readonly JWT _secure;
-        public AuthManager(ILogger<IAuthManager> log, IOptions<JWT> secure, IUnitOfWork uow)
+        private readonly Jwt _secure;
+        public AuthManager(ILogger<IAuthManager> log, IOptions<Jwt> secure, IUnitOfWork uow)
         {
             _log = log;
             _uow = uow;
             _secure = secure.Value;
         }
 
-        public TokenResponse LoginUser(UserModel model)
+        public TokenResponse LoginUser(AuthenticateUserModel model, string password)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public UserModel CreateUser(UserModel user, string password)
@@ -51,7 +50,7 @@ namespace Canteen.Core.Managers
 
     public interface IAuthManager
     {
-        TokenResponse LoginUser(UserModel model);
+        TokenResponse LoginUser(AuthenticateUserModel model, string password);
         UserModel CreateUser(UserModel user, string password);
     }
 }

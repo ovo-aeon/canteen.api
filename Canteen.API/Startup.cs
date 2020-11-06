@@ -21,13 +21,18 @@ using Canteen.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Canteen.API.Middlewares;
 using Canteen.Core.Managers;
+using Canteen.Core.Utilities;
 
 namespace Canteen.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private Jwt _settings { get; }
+        //private IWebHostEnvironment _env { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            _settings = configuration.GetSection("Jwt").Get<Jwt>();
+            //_env = env;
             Configuration = configuration;
         }
 
@@ -44,26 +49,8 @@ namespace Canteen.API
                 ctx => ctx.MigrationsAssembly(typeof(CanteenContext).Assembly.FullName)));
            // 
             services.AddUnitOfWork<CanteenContext>();
-            //services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CanteenContext>();
-            //register jwt authentication services
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.RequireHttpsMetadata = false;
-                        options.SaveToken = true;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer = Configuration["Jwt: Issuer"],
-                            ValidAudience = Configuration["Jwt: Audience"],
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                            ClockSkew = TimeSpan.Zero
-                        };
-                    });
+            services.AddJwtAuthentication(_settings.Key, _settings.Issuer, _settings.Audience);
+           
             // Managers
             services.AddScoped<IAuthManager, AuthManager>();
 
@@ -86,8 +73,8 @@ namespace Canteen.API
             //    .AllowAnyOrigin()
             //    .AllowAnyMethod()
             //    .AllowAnyHeader());
-
             app.UseRouting();
+            app.UseJwtAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
