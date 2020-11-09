@@ -45,6 +45,7 @@ namespace Canteen.Core.BusinessModels
             userEntity.PasswordHash = passwordHash;
             userEntity.PasswordSalt = passwordSalt;
             userEntity.CreatedAt = DateTime.Now;
+            userEntity.IsActive = true;
             // Assign every user default role
             userEntity.Role = Roles.Customer;
             return userEntity;
@@ -63,10 +64,22 @@ namespace Canteen.Core.BusinessModels
     {
         public string JwtToken { get; set; }
 
-        public string Refresh { get; set; }
+        public string RefreshToken { get; set; }
         public string Username { get; set; }
 
         public string Email { get; set; }
+
+        internal TokenResponse CreateResp(string username, string token, string email, string refreshToken)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email)) return null;
+
+            var resp = new TokenResponse();
+            resp.JwtToken = token;
+            resp.Email = email;
+            resp.Username = username;
+            resp.RefreshToken = refreshToken;
+            return resp;
+        }
 
     }
 

@@ -10,6 +10,7 @@ using Canteen.Core.Entities;
 using Canteen.Core.BusinessModels;
 using Microsoft.AspNetCore.Authorization;
 using Canteen.Core.Managers;
+using Canteen.Core.Utilities;
 
 namespace Canteen.API.Controllers
 {
@@ -31,9 +32,9 @@ namespace Canteen.API.Controllers
         {
             var user = _mgr.LoginUser(model, model.Password);
 
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-            return Ok(user);
+            if (user.Response == null)
+                return BadRequest(new APIResponse { Message = user.Message, Response = user.Response });
+            return Ok(new APIResponse { IsSuccess=true,Message=user.Message, Response=user.Response});
         }
 
         [HttpPost]
@@ -45,90 +46,98 @@ namespace Canteen.API.Controllers
             if (user == null) return BadRequest(model);
             return Ok(user);
         }
-        //// GET: api/Auth
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<AppUser>>> GetAppUsers()
-        //{
-        //    return await _ctx..ToListAsync();
-        //}
 
-        //// GET: api/Auth/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<AppUser>> GetAppUser(int id)
-        //{
-        //    var appUser = await _ctx.AppUsers.FindAsync(id);
 
-        //    if (appUser == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost]
+        [Route("check")]
+        public IActionResult Check(AuthenticateUserModel model)
+        {
+            return Ok(model);
+        }
+            //// GET: api/Auth
+            //[HttpGet]
+            //public async Task<ActionResult<IEnumerable<AppUser>>> GetAppUsers()
+            //{
+            //    return await _ctx..ToListAsync();
+            //}
 
-        //    return appUser;
-        //}
+            //// GET: api/Auth/5
+            //[HttpGet("{id}")]
+            //public async Task<ActionResult<AppUser>> GetAppUser(int id)
+            //{
+            //    var appUser = await _ctx.AppUsers.FindAsync(id);
 
-        //// PUT: api/Auth/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
-        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutAppUser(int id, AppUser appUser)
-        //{
-        //    if (id != appUser.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+            //    if (appUser == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-        //    _ctx.Entry(appUser).State = EntityState.Modified;
+            //    return appUser;
+            //}
 
-        //    try
-        //    {
-        //        await _ctx.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!AppUserExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            //// PUT: api/Auth/5
+            //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+            //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+            //[HttpPut("{id}")]
+            //public async Task<IActionResult> PutAppUser(int id, AppUser appUser)
+            //{
+            //    if (id != appUser.Id)
+            //    {
+            //        return BadRequest();
+            //    }
 
-        //    return NoContent();
-        //}
+            //    _ctx.Entry(appUser).State = EntityState.Modified;
 
-        //// POST: api/Auth
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
-        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPost]
-        //public async Task<ActionResult<AppUser>> PostAppUser(AppUser appUser)
-        //{
-        //    _ctx.AppUsers.Add(appUser);
-        //    await _ctx.SaveChangesAsync();
+            //    try
+            //    {
+            //        await _ctx.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!AppUserExists(id))
+            //        {
+            //            return NotFound();
+            //        }
+            //        else
+            //        {
+            //            throw;
+            //        }
+            //    }
 
-        //    return CreatedAtAction("GetAppUser", new { id = appUser.Id }, appUser);
-        //}
+            //    return NoContent();
+            //}
 
-        //// DELETE: api/Auth/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<AppUser>> DeleteAppUser(int id)
-        //{
-        //    var appUser = await _ctx.AppUsers.FindAsync(id);
-        //    if (appUser == null)
-        //    {
-        //        return NotFound();
-        //    }
+            //// POST: api/Auth
+            //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+            //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+            //[HttpPost]
+            //public async Task<ActionResult<AppUser>> PostAppUser(AppUser appUser)
+            //{
+            //    _ctx.AppUsers.Add(appUser);
+            //    await _ctx.SaveChangesAsync();
 
-        //    _ctx.AppUsers.Remove(appUser);
-        //    await _ctx.SaveChangesAsync();
+            //    return CreatedAtAction("GetAppUser", new { id = appUser.Id }, appUser);
+            //}
 
-        //    return appUser;
-        //}
+            //// DELETE: api/Auth/5
+            //[HttpDelete("{id}")]
+            //public async Task<ActionResult<AppUser>> DeleteAppUser(int id)
+            //{
+            //    var appUser = await _ctx.AppUsers.FindAsync(id);
+            //    if (appUser == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-        //private bool AppUserExists(int id)
-        //{
-        //    return _ctx.AppUsers.Any(e => e.Id == id);
-        //}
+            //    _ctx.AppUsers.Remove(appUser);
+            //    await _ctx.SaveChangesAsync();
+
+            //    return appUser;
+            //}
+
+            //private bool AppUserExists(int id)
+            //{
+            //    return _ctx.AppUsers.Any(e => e.Id == id);
+            //}
+        }
     }
-}

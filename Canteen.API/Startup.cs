@@ -29,7 +29,7 @@ namespace Canteen.API
     {
         private Jwt _settings { get; }
         //private IWebHostEnvironment _env { get; }
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             _settings = configuration.GetSection("Jwt").Get<Jwt>();
             //_env = env;
@@ -74,7 +74,7 @@ namespace Canteen.API
             //    .AllowAnyMethod()
             //    .AllowAnyHeader());
             app.UseRouting();
-            app.UseJwtAuthentication();
+            //app.UseJwtAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
