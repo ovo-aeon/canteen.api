@@ -21,6 +21,7 @@ namespace Canteen.Core.Entities
         public Roles Role { get; set; }
         public bool IsActive { get; set; }
         public virtual ICollection<CustomerOrders> Orders { get; set; }
+        public virtual ICollection<Review> MyReviews { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedDate { get; set; }
 

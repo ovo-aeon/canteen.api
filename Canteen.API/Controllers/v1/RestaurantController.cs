@@ -2,20 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Canteen.Core.BusinessModels;
+using Canteen.Core.Entities;
+using Canteen.Core.Managers;
+using Canteen.Core.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Canteen.API.Controllers.v1
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class RestaurantController : ControllerBase
     {
+        private readonly IRestaurantManager _restaurantManager;
+
+        public RestaurantController(IRestaurantManager restaurantManager)
+        {
+            _restaurantManager = restaurantManager;
+        }
         // GET: api/Restaurant
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var res= _restaurantManager.ReadAllRestaurants().ToList();
+            if (res.Count > 0) return Ok(new APIResponse {IsSuccess=true,Message=$"Retrieved Restaurants{res.Count}", Response=res });
+            return BadRequest(new APIResponse { Message = $"Retrieved Restaurants{res.Count}", Response = res });
         }
 
         // GET: api/Restaurant/5
@@ -27,8 +42,12 @@ namespace Canteen.API.Controllers.v1
 
         // POST: api/Restaurant
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("create")]
+        public async Task<IActionResult> Post([FromForm] RestaurantModel model)
         {
+            var createdRest = await _restaurantManager.CreateRestaurant(model);
+            if (createdRest != null) return Ok(new APIResponse { IsSuccess = true, Message = $"Created Restaurant{createdRest.Name}", Response = createdRest });
+            return BadRequest(new APIResponse { Message = $"Couldn't create restaurant {model.Name}", Response = createdRest });
         }
 
         // PUT: api/Restaurant/5

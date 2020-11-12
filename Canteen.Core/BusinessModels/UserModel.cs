@@ -23,12 +23,12 @@ namespace Canteen.Core.BusinessModels
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Phone number is required")]
-        [StringLength(11, ErrorMessage = "Phone can't be longer than 11 characters")]
+        [MinLength(11, ErrorMessage = "Phone can't be less than 11 characters")]
         public string Phone { get; set; }
 
         [JsonIgnore]
         [Required(ErrorMessage = "Password is required")]
-        [StringLength(60, ErrorMessage = "Password can't be less than 9 characters")]
+        [MinLength(8, ErrorMessage = "Password can't be less than 8 characters")]
         public string Password { get; set; }
 
         internal AppUser Create(UserModel user,string password)
@@ -57,6 +57,7 @@ namespace Canteen.Core.BusinessModels
         public string Username { get; set; }
 
         [Required]
+        [MinLength(8)]
         public string Password { get; set; }
     }
 

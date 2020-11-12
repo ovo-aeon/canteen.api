@@ -39,7 +39,7 @@ namespace Canteen.Core.DataAccess
             }
             context.AddRange(entities);
         }
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> LoadAll()
         {
             return context.Set<T>().AsNoTracking();
         }
@@ -57,7 +57,7 @@ namespace Canteen.Core.DataAccess
         {
             context.Set<T>().Update(entity);
         }
-        public T GetOne(object id)
+        public T LoadOne(object id)
         {
             return context.Set<T>().Find(id);
         }
@@ -82,8 +82,8 @@ namespace Canteen.Core.DataAccess
         IQueryable<T> Query(string sql, params object[] parameters);
         void Insert(T entity);
         void Insert(IEnumerable<T> entity);
-        IEnumerable<T> GetAll();
-        T GetOne(object entity);
+        IEnumerable<T> LoadAll();
+        T LoadOne(object entity);
         T FindByCondition(Expression<Func<T, bool>> expression);
         List<T> FindManyByCondition(Expression<Func<T, bool>> expression);
         void Delete(T entity);

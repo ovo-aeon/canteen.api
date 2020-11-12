@@ -53,6 +53,7 @@ namespace Canteen.API
            
             // Managers
             services.AddScoped<IAuthManager, AuthManager>();
+            services.AddScoped<IRestaurantManager, RestaurantManager>();
 
         }
 

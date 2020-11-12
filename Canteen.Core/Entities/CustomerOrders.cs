@@ -6,10 +6,10 @@ namespace Canteen.Core.Entities
 {
     public class CustomerOrders:Entity
     {
-        public virtual AppUser AppUser { get; set; }
+        public virtual AppUser Customer { get; set; }
         public DateTimeOffset OrderDate { get; set; }
         public bool OrderStatus { get; set; }
-        public int Money { get; set; }
+        public decimal Amount { get; set; }
 
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Canteen.Core.DataAccess;
 using Canteen.Core.Entities;
 using Canteen.Core.Utilities;
 using Microsoft.AspNetCore.Hosting;
@@ -41,7 +42,9 @@ namespace Canteen.API
                     //var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     //var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     //await Seed.SeedEssentialsAsync(userManager, roleManager);
-                    host.Run();
+
+                    //automatic migration
+                    host.MigrateDatabase().Run();
                 }
                 catch (Exception ex)
                 {

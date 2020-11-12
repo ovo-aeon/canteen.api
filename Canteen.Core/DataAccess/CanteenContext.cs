@@ -15,8 +15,14 @@ namespace Canteen.Core.DataAccess
         }
 
         // set DB tables
-        public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<CustomerOrders> CustomerOrders { get; set; }
-        
+        public virtual DbSet<AppUser> AppUsers { get; set; }
+        public virtual DbSet<CustomerOrders> CustomerOrders { get; set; }
+        public virtual DbSet<Restaurant> Restaurants { get; set; }
+        public virtual DbSet<Delicacy> Delicacies { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
+
     }
 }

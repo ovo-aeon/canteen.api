@@ -66,7 +66,7 @@ namespace Canteen.Core.Managers
         {
            if(id != 0)
             {
-                var user = _uow.GetRepository<AppUser>().GetOne(id);
+                var user = _uow.GetRepository<AppUser>().LoadOne(id);
                 return user;
             }
             return null;
