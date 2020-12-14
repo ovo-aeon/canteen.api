@@ -67,6 +67,9 @@ namespace Canteen.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Role")
+                        .IsUnique();
+
                     b.ToTable("AppUsers");
                 });
 

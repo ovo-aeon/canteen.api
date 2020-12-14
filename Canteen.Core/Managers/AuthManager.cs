@@ -28,18 +28,26 @@ namespace Canteen.Core.Managers
             var user = _uow.GetRepository<AppUser>().FindByCondition(u => u.Username == model.Username && u.IsActive == true);
             var verifyPwd = AuthHelperClass.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt);
             if (user == null && verifyPwd == false) return (null, "Something is wrong check your entries!");
-            var role = Enum.GetName(typeof(Roles), user.Role);
-            var claims = new ClaimsIdentity(new[] { new Claim("id", $"{user.Id}"), new Claim(ClaimTypes.Name, model.Username), new Claim(ClaimTypes.Role, role) });
+            // Todo do a dto
+
+            var role = ConvertRoleToString(user);
+            var claims = new ClaimsIdentity(new[] { new Claim("id", $"{user.Id}"), new Claim(ClaimTypes.Name, model.Username), new Claim(ClaimTypes.Role, user.Role.ToString()) });
 
             var token = AuthHelperClass.GenerateJwtToken(_secure.Key, (int)_secure.DurationInMinutes, claims);
             var refreshToken = AuthHelperClass.GenerateRefreshToken();
             claims.AddClaim(new Claim("token", token));
+
             var resp = new TokenResponse().CreateResp(model.Username, token, user.Email, refreshToken);
             // Save tokens to DB
 
             _uow.GetRepository<AppUser>().Update(user);
             _uow.Commit();
             return (resp, "User login Authenticated");
+        }
+
+        private string ConvertRoleToString(AppUser roles)
+        {
+            return Enum.GetName(typeof(Roles), roles.Role);
         }
 
         public UserModel CreateUser(UserModel user, string password)
@@ -51,12 +59,17 @@ namespace Canteen.Core.Managers
 
             var userExists = _uow.GetRepository<AppUser>().FindByCondition(u => u.Username.Equals(user.Username) && user.Email.Equals(user.Email));
 
+            // Todo give user more info when rule is violated 
             if (userExists != null)
-                throw new Exception("Username \"" + user.Username + "\" is already taken");
+                return null;
 
             var userEntity = new UserModel().Create(user, password);
             _uow.GetRepository<AppUser>().Insert(userEntity);
             var savedEntityId = _uow.Commit();
+            // Todo try to send only the role
+            var role = ConvertRoleToString(userEntity);
+            // Todo let new user have some basic  claims ex, Roles
+            var claims = new ClaimsIdentity(new[] { new Claim("id", $"{userEntity.Id}"), new Claim(ClaimTypes.Name, userEntity.Email), new Claim(ClaimTypes.Role, role)});
             _log.LogInformation($"Saved => {user.Username} {savedEntityId}", user.Username, savedEntityId);
             user.Password = "";
             return user;

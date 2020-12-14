@@ -43,12 +43,15 @@ namespace Canteen.API
         {
             services.AddControllers();
             // register data access implementation
+            var conn = Configuration.GetConnectionString("Canteen.DefaultConnection");
             services.AddDbContextPool<CanteenContext>(options => 
             options.UseSqlServer(
-                Configuration.GetConnectionString("Canteen.DefaultConnection"),
+                conn,
                 ctx => ctx.MigrationsAssembly(typeof(CanteenContext).Assembly.FullName)));
-           // 
+           // DBContext
             services.AddUnitOfWork<CanteenContext>();
+
+            // Auth/Auth
             services.AddJwtAuthentication(_settings.Key, _settings.Issuer, _settings.Audience);
            
             // Managers
@@ -75,7 +78,6 @@ namespace Canteen.API
             //    .AllowAnyMethod()
             //    .AllowAnyHeader());
             app.UseRouting();
-            //app.UseJwtAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSerilogRequestLogging();

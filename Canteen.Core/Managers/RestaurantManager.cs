@@ -34,25 +34,8 @@ namespace Canteen.Core.Managers
                 if (restrt ==null) return null;
                 var rest = new RestaurantModel().Create(model);
 
-                if (model.Logo != null)
-                {
-                    if (model.Logo.FileName.Length > 0)
-                    {
-                        //Getting FileName
-                        var fileName = Path.GetFileName(model.Logo.FileName);
-                        //Getting file Extension
-                        var fileExtension = Path.GetExtension(fileName);
-                        // concatenating  FileName + FileExtension
-                        var renamedFileName = String.Concat(Convert.ToString(Guid.NewGuid()), fileExtension);
-
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await model.Logo.CopyToAsync(memoryStream);
-                            rest.Logo = memoryStream.ToArray();
-                        }
-                    }
-                }
-                rest.LogoName = model.Logo.FileName;
+               
+                rest.LogoName = model.Logo;
                 _uow.GetRepository<Restaurant>().Insert(rest);
                 _uow.Commit();
                 return model;

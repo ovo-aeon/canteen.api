@@ -15,7 +15,6 @@ namespace Canteen.Core.Entities
         public string SearchKeyWords { get; set; }
         public string Phone { get; set; }
         public string LogoName { get; set; }
-        public byte[] Logo { get; set; }
         public virtual ICollection<Delicacy> Delicacies { get; set; }
         public decimal Revenue { get; set; }
         public virtual ICollection<Review> Reviews { get;set; }

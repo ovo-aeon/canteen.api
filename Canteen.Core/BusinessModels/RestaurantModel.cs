@@ -29,9 +29,7 @@ namespace Canteen.Core.BusinessModels
         [MinLength(11)]
         [MaxLength(13)]
         public string Phone { get; set; }
-        public string LogoName { get; set; }
-        [Required]
-        public IFormFile Logo { get; set; }
+        public string Logo{ get; set; }
 
         internal Restaurant Create(RestaurantModel model)
         {

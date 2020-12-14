@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Canteen.Core.Migrations
 {
     [DbContext(typeof(CanteenContext))]
-    [Migration("20201111104521_Restart my migrations")]
-    partial class Restartmymigrations
+    [Migration("20201121153512_Useroles setups")]
+    partial class Userolessetups
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,9 @@ namespace Canteen.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Role")
+                        .IsUnique();
 
                     b.ToTable("AppUsers");
                 });

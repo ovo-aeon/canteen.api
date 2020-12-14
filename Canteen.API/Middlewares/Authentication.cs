@@ -34,6 +34,7 @@ namespace Canteen.API.Middlewares
             });
 
             // ensure that authorization is required globally throughout the app
+            // Makes sure no need to add Authorize attribute
             var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 
             services.AddControllers(options => { options.Filters.Add(new AuthorizeFilter(policy)); })
@@ -55,61 +56,16 @@ namespace Canteen.API.Middlewares
                 ClockSkew = TimeSpan.Zero
             };
         }
-        //public static IApplicationBuilder UseJwtAuthentication(this IApplicationBuilder app)
-        //{
-        //    return app.UseMiddleware<JwtMiddleware>();
-        //}
+
+        public class AuthorizeRolesAttribute : AuthorizeAttribute
+        {
+            public AuthorizeRolesAttribute(params Roles[] roles) : base()
+            {
+                Roles = string.Join(",", roles);
+            }
+        }
+
     }
 
-    //public class JwtMiddleware
-    //{
-    //    private readonly RequestDelegate _next;
-    //    private readonly Jwt _settings;
-
-    //    public JwtMiddleware(RequestDelegate next, IOptions<Jwt> settings)
-    //    {
-    //        _next = next;
-    //        _settings = settings.Value;
-    //    }
-
-    //    public async Task Invoke(HttpContext context, IAuthManager mgr)
-    //    {
-    //        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-    //        if (token != null)
-    //            attachUserToContext(context, mgr, token);
-
-    //        await _next(context);
-    //    }
-
-    //    private void attachUserToContext(HttpContext context, IAuthManager mgr, string token)
-    //    {
-    //        try
-    //        {
-    //            var tokenHandler = new JwtSecurityTokenHandler();
-    //            var key = Encoding.ASCII.GetBytes(_settings.Key);
-    //            tokenHandler.ValidateToken(token, new TokenValidationParameters
-    //            {
-    //                ValidateIssuerSigningKey = true,
-    //                IssuerSigningKey = new SymmetricSecurityKey(key),
-    //                ValidateIssuer = false,
-    //                ValidateAudience = false,
-    //                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-    //                ClockSkew = TimeSpan.Zero
-    //            }, out SecurityToken validatedToken);
-
-    //            var jwtToken = (JwtSecurityToken)validatedToken;
-    //            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-
-    //            // attach user to context on successful jwt validation
-    //            context.Items["User"] = mgr.GetUser(userId);
-    //        }
-    //        catch
-    //        {
-    //            // do nothing if jwt validation fails
-    //            // user is not attached to context so request won't have access to secure routes
-    //        }
-    //    }
-    //}
 }
 

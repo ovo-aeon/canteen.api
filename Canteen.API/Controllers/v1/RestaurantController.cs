@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using static Canteen.API.Middlewares.Authentication;
 
 namespace Canteen.API.Controllers.v1
 {
@@ -28,8 +29,8 @@ namespace Canteen.API.Controllers.v1
         [HttpGet]
         public IActionResult Get()
         {
-            var res= _restaurantManager.ReadAllRestaurants().ToList();
-            if (res.Count > 0) return Ok(new APIResponse {IsSuccess=true,Message=$"Retrieved Restaurants{res.Count}", Response=res });
+            var res = _restaurantManager.ReadAllRestaurants().ToList();
+            if (res.Count > 0) return Ok(new APIResponse { IsSuccess = true, Message = $"Retrieved Restaurants{res.Count}", Response = res });
             return BadRequest(new APIResponse { Message = $"Retrieved Restaurants{res.Count}", Response = res });
         }
 
@@ -43,6 +44,7 @@ namespace Canteen.API.Controllers.v1
         // POST: api/Restaurant
         [HttpPost]
         [Route("create")]
+        [AuthorizeRoles(Roles.Vendor, Roles.Admin)]
         public async Task<IActionResult> Post([FromForm] RestaurantModel model)
         {
             var createdRest = await _restaurantManager.CreateRestaurant(model);

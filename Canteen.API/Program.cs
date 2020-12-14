@@ -44,7 +44,7 @@ namespace Canteen.API
                     //await Seed.SeedEssentialsAsync(userManager, roleManager);
 
                     //automatic migration
-                    host.MigrateDatabase().Run();
+                    host.Run();
                 }
                 catch (Exception ex)
                 {

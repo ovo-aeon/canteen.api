@@ -9,12 +9,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{39DF95CD-9B0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{427EA428-604C-4E8D-85A3-426BC42E0E8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Canteen.API", "Canteen.API\Canteen.API.csproj", "{F5880577-2104-48E6-AFD4-1D345BD35375}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Canteen.API", "Canteen.API\Canteen.API.csproj", "{F5880577-2104-48E6-AFD4-1D345BD35375}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C71251E2-BB69-4DAD-A3AC-70AE61758079} = {C71251E2-BB69-4DAD-A3AC-70AE61758079}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Canteen.Core", "Canteen.Core\Canteen.Core.csproj", "{C71251E2-BB69-4DAD-A3AC-70AE61758079}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Canteen.Core", "Canteen.Core\Canteen.Core.csproj", "{C71251E2-BB69-4DAD-A3AC-70AE61758079}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantCtr", "RestaurantController\RestaurantCtr.csproj", "{F7A2C34A-DADF-4946-A223-FE8CC57AE1FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{C71251E2-BB69-4DAD-A3AC-70AE61758079}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C71251E2-BB69-4DAD-A3AC-70AE61758079}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C71251E2-BB69-4DAD-A3AC-70AE61758079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A2C34A-DADF-4946-A223-FE8CC57AE1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A2C34A-DADF-4946-A223-FE8CC57AE1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A2C34A-DADF-4946-A223-FE8CC57AE1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A2C34A-DADF-4946-A223-FE8CC57AE1FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{427EA428-604C-4E8D-85A3-426BC42E0E8A} = {2389BC32-C1B1-48C3-9270-CFF207341FAE}
 		{F5880577-2104-48E6-AFD4-1D345BD35375} = {39DF95CD-9B08-4111-BCE8-73D8DA917F8D}
 		{C71251E2-BB69-4DAD-A3AC-70AE61758079} = {39DF95CD-9B08-4111-BCE8-73D8DA917F8D}
+		{F7A2C34A-DADF-4946-A223-FE8CC57AE1FC} = {427EA428-604C-4E8D-85A3-426BC42E0E8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC933E87-FB4F-4097-9B9A-9B6FA3F57EEA}

@@ -11,6 +11,8 @@ using Canteen.Core.BusinessModels;
 using Microsoft.AspNetCore.Authorization;
 using Canteen.Core.Managers;
 using Canteen.Core.Utilities;
+using System.Security.Claims;
+using static Canteen.API.Middlewares.Authentication;
 
 namespace Canteen.API.Controllers
 {
@@ -43,6 +45,8 @@ namespace Canteen.API.Controllers
         public IActionResult Register(UserModel model)
         {
             var user = _mgr.CreateUser(model, model.Password);
+            var role = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+
             if (user == null) return BadRequest(model);
             return Ok(user);
         }
@@ -50,6 +54,7 @@ namespace Canteen.API.Controllers
 
         [HttpPost]
         [Route("check")]
+        [AuthorizeRoles(Roles.Vendor, Roles.Admin)]
         public IActionResult Check(AuthenticateUserModel model)
         {
             return Ok(model);

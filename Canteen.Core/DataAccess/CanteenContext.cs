@@ -22,6 +22,9 @@ namespace Canteen.Core.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AppUser>()
+                .HasIndex(i => i.Role)
+                .IsUnique();
         }
 
     }
